@@ -1,349 +1,294 @@
-<p align="center">
-  <img width="600" height="280" alt="images" src="https://github.com/user-attachments/assets/a9dcd7c8-6607-47df-a38e-d04ec4a7248c" />
-</p>
-
-
-# KantoDB
----
+# 🎵 Plataforma de Streaming de Música
 
 <p align="center">
-  <strong>Desafio Final - Módulo 2</strong>
+  <strong>Desafio Final — Módulo 2 | Banco de Dados</strong>
 </p>
 
 <p align="center">
-Banco de dados relacional inspirado no universo Pokémon, desenvolvido para representar treinadores, espécies, tipos, capturas e batalhas.
-
-O projeto foi criado com foco em modelagem de dados, integridade referencial e consultas SQL aplicadas a um mini-mundo autoral.
+  Projeto de modelagem e implementação de um banco de dados relacional para uma plataforma fictícia de streaming de música.
 </p>
 
 ---
 
-## Sobre o projeto
-![Static Badge](https://img.shields.io/badge/sql-blue) ![Static Badge](https://img.shields.io/badge/postgresql-green) ![Static Badge](https://img.shields.io/badge/projeto_em_constru%C3%A7%C3%A3o-red)
+## 📌 Sobre o projeto
 
-O KantoDB simula um sistema de gerenciamento de treinadores Pokémon.
+Este projeto apresenta a modelagem de um banco de dados para uma plataforma de streaming de música, permitindo o gerenciamento de usuários, artistas, músicas, playlists e reproduções.
 
-O banco permite registrar:
+A proposta foi desenvolvida com foco em:
 
-* treinadores;
-* espécies de Pokémon;
-* tipos;
-* capturas;
-* batalhas;
-* participações em batalhas;
-* resultados e pontuações.
+* modelagem de dados;
+* normalização;
+* integridade referencial;
+* relacionamentos entre entidades;
+* criação e manipulação de dados;
+* desenvolvimento de consultas SQL aplicadas a situações reais.
 
-Os dados relacionados às espécies de Pokémon são baseados na franquia Pokémon. Os dados de treinadores, capturas, locais, batalhas e resultados foram criados de forma fictícia exclusivamente para fins acadêmicos.
+O banco de dados permite representar desde o cadastro de usuários e artistas até a criação de playlists e o registro do histórico de reprodução das músicas.
 
-## Mini-mundo
+---
 
-O sistema considera as seguintes regras de negócio:
+## 🌎 Mini-mundo
 
-1. Um treinador pode realizar várias capturas.
-2. Cada captura pertence a apenas um treinador.
-3. Uma espécie de Pokémon pode estar presente em várias capturas.
-4. Cada captura representa um indivíduo de uma espécie Pokémon.
-5. Um Pokémon pode possuir um ou mais tipos.
-6. Um tipo pode estar associado a vários Pokémon.
-7. Uma batalha pode possuir várias participações.
-8. Um treinador pode participar de várias batalhas.
-9. Cada participação utiliza um Pokémon previamente capturado pelo treinador.
-10. Um treinador pode existir sem possuir capturas.
-11. Um Pokémon pode existir no catálogo sem ter sido capturado.
-12. Uma captura pode possuir ou não um apelido.
+A plataforma permite que usuários criem uma conta, escolham um plano e escutem músicas cadastradas por diferentes artistas.
 
-## Modelo entidade-relacionamento
+Cada artista pode possuir várias músicas, enquanto cada música pertence a um único artista.
 
-O banco possui as seguintes entidades:
+Os usuários podem criar diversas playlists e adicionar diferentes músicas a cada uma delas. Uma mesma música também pode estar presente em várias playlists, caracterizando um relacionamento muitos-para-muitos.
 
-* `treinador`
-* `pokemon`
-* `tipo`
-* `pokemon_tipo`
-* `captura`
-* `batalha`
-* `participacao_batalha`
+Além disso, cada reprodução realizada por um usuário é registrada, armazenando informações como a música escutada, a data e o horário da reprodução e o tempo total ouvido.
 
-### Relações N:N
+Com esses dados, é possível analisar:
 
-O projeto possui duas relações muitos-para-muitos principais.
+* músicas mais reproduzidas;
+* artistas mais populares;
+* gêneros mais escutados;
+* comportamento dos usuários;
+* duração média das reproduções;
+* quantidade de músicas por playlist;
+* usuários que ainda não criaram playlists;
+* músicas que nunca foram reproduzidas.
 
-#### Treinador e Pokémon
+---
 
-Um treinador pode capturar vários Pokémon, e uma mesma espécie pode ser capturada por vários treinadores.
+## 🗃️ Entidades
 
-Essa relação é resolvida pela entidade associativa `captura`.
+O banco de dados é composto por seis tabelas principais.
 
-```text
-TREINADOR 1:N CAPTURA N:1 POKEMON
-```
+### `usuarios`
 
-#### Pokémon e tipo
+Armazena as informações dos usuários cadastrados na plataforma.
 
-Um Pokémon pode possuir mais de um tipo, e um tipo pode estar associado a vários Pokémon.
+| Campo           | Descrição                      |
+| --------------- | ------------------------------ |
+| `usuario_id`    | Identificador único do usuário |
+| `nome`          | Nome do usuário                |
+| `email`         | E-mail utilizado no cadastro   |
+| `plano`         | Plano contratado pelo usuário  |
+| `data_cadastro` | Data de criação da conta       |
+| `cidade`        | Cidade do usuário              |
 
-Essa relação é resolvida pela tabela associativa `pokemon_tipo`.
+### `artistas`
 
-```text
-POKEMON 1:N POKEMON_TIPO N:1 TIPO
-```
+Armazena os dados dos artistas disponíveis na plataforma.
 
-## Estrutura das tabelas
+| Campo              | Descrição                      |
+| ------------------ | ------------------------------ |
+| `artista_id`       | Identificador único do artista |
+| `nome_artistico`   | Nome artístico                 |
+| `genero_principal` | Principal gênero musical       |
+| `pais_origem`      | País de origem                 |
 
-### treinador
+### `musicas`
 
-Armazena os treinadores cadastrados no sistema.
+Armazena as músicas cadastradas na plataforma.
 
-| Campo         | Tipo    | Restrição |
-| ------------- | ------- | --------- |
-| id_treinador  | INT     | PK        |
-| nome          | VARCHAR | NOT NULL  |
-| cidade        | VARCHAR | NOT NULL  |
-| data_cadastro | DATE    | NOT NULL  |
+| Campo              | Descrição                       |
+| ------------------ | ------------------------------- |
+| `musica_id`        | Identificador único da música   |
+| `titulo`           | Título da música                |
+| `artista_id`       | Artista responsável pela música |
+| `genero`           | Gênero musical                  |
+| `duracao_segundos` | Duração total em segundos       |
+| `ano_lancamento`   | Ano de lançamento               |
 
-### pokemon
+### `playlists`
 
-Armazena as espécies de Pokémon.
+Armazena as playlists criadas pelos usuários.
 
-| Campo            | Tipo    | Restrição        |
-| ---------------- | ------- | ---------------- |
-| id_pokemon       | INT     | PK               |
-| nome             | VARCHAR | NOT NULL, UNIQUE |
-| altura           | DECIMAL | NOT NULL         |
-| peso             | DECIMAL | NOT NULL         |
-| experiencia_base | INT     | NOT NULL         |
+| Campo          | Descrição                         |
+| -------------- | --------------------------------- |
+| `playlist_id`  | Identificador único da playlist   |
+| `usuario_id`   | Usuário responsável pela playlist |
+| `nome`         | Nome da playlist                  |
+| `data_criacao` | Data de criação                   |
 
-### tipo
+### `playlist_musica`
 
-Armazena os tipos dos Pokémon.
+Tabela associativa responsável pelo relacionamento muitos-para-muitos entre playlists e músicas.
 
-| Campo   | Tipo    | Restrição        |
-| ------- | ------- | ---------------- |
-| id_tipo | INT     | PK               |
-| nome    | VARCHAR | NOT NULL, UNIQUE |
+| Campo         | Descrição                           |
+| ------------- | ----------------------------------- |
+| `playlist_id` | Identificador da playlist           |
+| `musica_id`   | Identificador da música             |
+| `data_adicao` | Data em que a música foi adicionada |
 
-### pokemon_tipo
+### `reproducoes`
 
-Tabela associativa entre Pokémon e tipo.
+Registra as músicas reproduzidas pelos usuários.
 
-| Campo      | Tipo | Restrição |
-| ---------- | ---- | --------- |
-| id_pokemon | INT  | PK, FK    |
-| id_tipo    | INT  | PK, FK    |
+| Campo                     | Descrição                         |
+| ------------------------- | --------------------------------- |
+| `reproducao_id`           | Identificador único da reprodução |
+| `usuario_id`              | Usuário que realizou a reprodução |
+| `musica_id`               | Música reproduzida                |
+| `data_hora`               | Data e horário da reprodução      |
+| `duracao_ouvida_segundos` | Tempo ouvido pelo usuário         |
 
-### captura
+---
 
-Representa um Pokémon capturado por um treinador.
+## 🔗 Relacionamentos
 
-| Campo         | Tipo    | Restrição    |
-| ------------- | ------- | ------------ |
-| id_captura    | INT     | PK           |
-| id_treinador  | INT     | FK, NOT NULL |
-| id_pokemon    | INT     | FK, NOT NULL |
-| apelido       | VARCHAR | NULL         |
-| nivel         | INT     | NOT NULL     |
-| data_captura  | DATE    | NOT NULL     |
-| local_captura | VARCHAR | NOT NULL     |
+O modelo possui os seguintes relacionamentos:
 
-### batalha
+* um artista pode possuir várias músicas;
+* uma música pertence a um único artista;
+* um usuário pode criar várias playlists;
+* uma playlist pertence a um único usuário;
+* um usuário pode realizar várias reproduções;
+* uma música pode possuir várias reproduções;
+* uma playlist pode conter várias músicas;
+* uma música pode estar presente em várias playlists.
 
-Armazena as batalhas realizadas.
+O relacionamento muitos-para-muitos entre `playlists` e `musicas` é resolvido pela tabela associativa `playlist_musica`.
 
-| Campo         | Tipo    | Restrição |
-| ------------- | ------- | --------- |
-| id_batalha    | INT     | PK        |
-| data_batalha  | DATE    | NOT NULL  |
-| local_batalha | VARCHAR | NOT NULL  |
-| modalidade    | VARCHAR | NOT NULL  |
+---
 
-### participacao_batalha
+## 🧩 Modelo entidade-relacionamento
 
-Registra a participação de um treinador e de uma captura em uma batalha.
+O diagrama entidade-relacionamento apresenta as entidades, os atributos, as chaves primárias, as chaves estrangeiras e os relacionamentos existentes no banco de dados.
 
-| Campo           | Tipo    | Restrição    |
-| --------------- | ------- | ------------ |
-| id_participacao | INT     | PK           |
-| id_batalha      | INT     | FK, NOT NULL |
-| id_treinador    | INT     | FK, NOT NULL |
-| id_captura      | INT     | FK, NOT NULL |
-| resultado       | VARCHAR | NOT NULL     |
-| pontos          | INT     | NOT NULL     |
+<p align="center">
+  <img src="docs/diagrama-er.png" alt="Diagrama entidade-relacionamento da plataforma de streaming de música" width="850">
+</p>
 
-## Tecnologias utilizadas
+> O caminho da imagem deverá ser atualizado caso o arquivo do diagrama seja armazenado em outra pasta.
 
-* PostgreSQL
-* DBeaver
-* dbdiagram.io
-* Git
-* GitHub
+---
 
-## Estrutura do repositório
+## 🛠️ Tecnologias utilizadas
+
+* PostgreSQL;
+* SQL;
+* DBeaver;
+* dbdiagram.io;
+* Git;
+* GitHub.
+
+---
+
+## 📁 Estrutura do repositório
 
 ```text
-kantodb/
+streaming-musica/
+│
+├── docs/
+│   └── diagrama-er.png
+│
+├── scripts/
+│   ├── 01_ddl.sql
+│   ├── 02_dml.sql
+│   └── 03_consultas.sql
 │
 ├── README.md
-├── docs/
-│   ├── diagrama-er.png
-│
-├── sql/
-│   ├── 01-create-database.sql
-│   ├── 02-create-tables.sql
-│   ├── 03-insert-data.sql
-│   └── 04-queries.sql
-│
-└── database.dbml
+└── LICENSE
 ```
 
-## Consultas desenvolvidas
+### Arquivos
 
-O projeto inclui uma bateria de dez consultas práticas, conforme solicitado no enunciado do desafio.
+* `01_ddl.sql`: criação das tabelas, chaves e restrições;
+* `02_dml.sql`: inserção dos registros utilizados no projeto;
+* `03_consultas.sql`: consultas desenvolvidas para análise dos dados;
+* `diagrama-er.png`: representação visual do modelo entidade-relacionamento.
 
-### 1. Pokémon de um tipo específico
+---
 
-Lista os Pokémon associados a um determinado tipo.
+## 🔍 Consultas desenvolvidas
 
-Recursos utilizados:
+O projeto contém dez consultas SQL baseadas em possíveis necessidades da plataforma.
 
-* `JOIN`;
-* filtro com `WHERE`.
+Entre as análises desenvolvidas estão:
 
-### 2. Capturas acima de determinado nível
+1. listar músicas e seus respectivos artistas;
+2. exibir as playlists criadas por cada usuário;
+3. calcular a quantidade de músicas existente em cada playlist;
+4. identificar as músicas mais reproduzidas;
+5. encontrar os artistas com maior número de reproduções;
+6. calcular o tempo total ouvido por usuário;
+7. identificar usuários que ainda não criaram playlists;
+8. encontrar músicas que nunca foram reproduzidas;
+9. criar um ranking das músicas mais escutadas;
+10. analisar a quantidade de reproduções por gênero musical.
 
-Lista capturas cujo nível seja superior a um valor definido.
+As consultas utilizam recursos como:
 
-Recursos utilizados:
-
-* `WHERE`;
-* operadores de comparação;
-* ordenação.
-
-### 3. Quantidade de capturas por treinador
-
-Exibe o total de Pokémon capturados por cada treinador.
-
-Recursos utilizados:
-
-* `COUNT`;
+* filtros com `WHERE`;
+* funções de agregação;
 * `GROUP BY`;
-* `JOIN`.
-
-### 4. Média de nível por treinador
-
-Calcula a média de nível das capturas de cada treinador.
-
-Recursos utilizados:
-
-* `AVG`;
-* `GROUP BY`;
-* `ROUND`.
-
-### 5. Pokémon com mais de um tipo
-
-Identifica espécies associadas a dois ou mais tipos.
-
-Recursos utilizados:
-
-* `COUNT`;
-* `GROUP BY`;
-* `HAVING`.
-
-### 6. Treinadores sem capturas
-
-Lista todos os treinadores, incluindo aqueles que ainda não capturaram nenhum Pokémon.
-
-Recursos utilizados:
-
-* `LEFT JOIN`;
-* verificação de `NULL`.
-
-### 7. Treinador, Pokémon e tipo
-
-Exibe o treinador, o Pokémon capturado e seu tipo.
-
-Recursos utilizados:
-
-* múltiplos `JOIN`;
-* combinação de quatro tabelas.
-
-### 8. Pokémon mais capturados
-
-Identifica as espécies com maior número de capturas.
-
-Recursos utilizados:
-
-* CTE;
-* `COUNT`;
-* ordenação.
-
-### 9. Ranking de treinadores
-
-Cria um ranking com base na pontuação obtida em batalhas.
-
-Recursos utilizados:
-
-* `SUM`;
-* `GROUP BY`;
-* `RANK()`;
-* função de janela.
-
-### 10. Maior captura de cada treinador
-
-Exibe o Pokémon de maior nível de cada treinador.
-
-Recursos utilizados:
-
-* CTE;
-* `ROW_NUMBER()`;
-* `PARTITION BY`.
-
-## Organização dos dados
-
-Os dados do projeto foram divididos em duas categorias:
-
-### Dados baseados na franquia
-
-* nomes das espécies;
-* tipos;
-* altura;
-* peso;
-* experiência-base.
-
-### Dados fictícios
-
-* treinadores;
-* cidades;
-* datas;
-* capturas;
-* níveis;
-* apelidos;
-* batalhas;
-* resultados;
-* pontuações.
-
-## Contexto acadêmico
-
-Projeto desenvolvido como atividade prática de banco de dados, contemplando:
-
-* criação de mini-mundo autoral;
-* diagrama entidade-relacionamento;
-* quatro ou mais tabelas;
-* relação N:N;
-* script DDL;
-* script DML;
-* no mínimo cinco registros por tabela;
-* registros sem correspondência;
-* dez consultas práticas;
-* filtros;
-* agregações;
-* `GROUP BY`;
+* `ORDER BY`;
 * múltiplos `JOIN`;
 * `LEFT JOIN`;
-* CTE;
-* Window Function.
+* subconsultas;
+* Common Table Expressions, ou CTEs;
+* Window Functions.
 
-## Aviso
+---
 
-Pokémon e seus respectivos nomes são propriedades de seus detentores legais.
+## ▶️ Como executar o projeto
 
-Este projeto não possui finalidade comercial e foi desenvolvido exclusivamente para fins de estudo.
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/seu-usuario/streaming-musica.git
+```
+
+### 2. Acesse a pasta do projeto
+
+```bash
+cd streaming-musica
+```
+
+### 3. Crie o banco de dados
+
+No PostgreSQL, crie um banco de dados para o projeto.
+
+```sql
+CREATE DATABASE streaming_musica;
+```
+
+### 4. Execute os scripts
+
+Execute os arquivos SQL na seguinte ordem:
+
+```text
+01_ddl.sql
+02_dml.sql
+03_consultas.sql
+```
+
+Os scripts podem ser executados pelo DBeaver, pelo terminal do PostgreSQL ou por outra ferramenta compatível.
+
+---
+
+## 🎓 Contexto acadêmico
+
+Projeto desenvolvido como desafio final do Módulo 2, contemplando os seguintes requisitos:
+
+* criação de um mini-mundo autoral;
+* elaboração de diagrama entidade-relacionamento;
+* criação de quatro ou mais tabelas;
+* implementação de relacionamento muitos-para-muitos;
+* criação de script DDL;
+* criação de script DML;
+* inserção de no mínimo cinco registros por tabela;
+* inclusão de registros sem correspondência;
+* desenvolvimento de dez consultas práticas;
+* aplicação de filtros;
+* utilização de funções de agregação;
+* utilização de `GROUP BY`;
+* utilização de múltiplos `JOIN`;
+* utilização de `LEFT JOIN`;
+* utilização de CTE;
+* utilização de Window Function.
+
+---
+## ⚠️ Aviso
+
+Este projeto não possui finalidade comercial.
+
+Os nomes, usuários, artistas, músicas e demais informações utilizadas no banco de dados são fictícios ou foram incluídos exclusivamente para fins educacionais.
+
+---
+
+<p align="center">
+  Desenvolvido para fins de estudo e prática de Banco de Dados.
+</p>
