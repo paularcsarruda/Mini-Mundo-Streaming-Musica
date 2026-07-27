@@ -1,4 +1,4 @@
-# 🎵 Plataforma de Streaming de Música
+<h1 align="center">🎵 Plataforma de Streaming de Música</h1>
 
 <p align="center">
   <strong>Desafio Final — Módulo 2 | Banco de Dados</strong>
@@ -142,19 +142,6 @@ O modelo possui os seguintes relacionamentos:
 O relacionamento muitos-para-muitos entre `playlists` e `musicas` é resolvido pela tabela associativa `playlist_musica`.
 
 ---
-
-## 🧩 Modelo entidade-relacionamento
-
-O diagrama entidade-relacionamento apresenta as entidades, os atributos, as chaves primárias, as chaves estrangeiras e os relacionamentos existentes no banco de dados.
-
-<p align="center">
-  <img src="docs/diagrama-er.png" alt="Diagrama entidade-relacionamento da plataforma de streaming de música" width="850">
-</p>
-
-> O caminho da imagem deverá ser atualizado caso o arquivo do diagrama seja armazenado em outra pasta.
-
----
-
 ## 🛠️ Tecnologias utilizadas
 
 * PostgreSQL;
