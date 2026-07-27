@@ -1,1 +1,2 @@
-<img width="8000" height="4500" alt="KantoDB_er-imagens-0" src="https://github.com/user-attachments/assets/0e809eb5-026a-4cd6-b39a-fe7970a6538f" />
+
+<img width="1793" height="918" alt="Captura de tela 2026-07-27 104152" src="https://github.com/user-attachments/assets/7c84d4d4-9d67-4b57-b7f0-9e6391131bf7" />
