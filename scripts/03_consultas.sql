@@ -113,8 +113,6 @@ ORDER BY
 
 -- =========================================================
 -- 6. Tempo total ouvido por usuário
--- Considerando que cada reprodução corresponde à música inteira
--- e que a duração está armazenada em segundos
 -- =========================================================
 SELECT
     u.nome AS usuario,
