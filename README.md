@@ -186,7 +186,7 @@ O projeto contém dez consultas SQL baseadas em possíveis necessidades da plata
 Entre as análises desenvolvidas estão:
 
 1. listar músicas e seus respectivos artistas;
-2. exibir as playlists criadas por cada usuário;
+2. playlists criadas por cada usuário, inclusive as zeradas;
 3. calcular a quantidade de músicas existente em cada playlist;
 4. identificar as músicas mais reproduzidas;
 5. encontrar os artistas com maior número de reproduções;
