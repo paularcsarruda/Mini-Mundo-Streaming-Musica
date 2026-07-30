@@ -246,28 +246,6 @@ Os scripts podem ser executados pelo DBeaver, pelo terminal do PostgreSQL ou por
 
 ---
 
-## 🎓 Contexto acadêmico
-
-Projeto desenvolvido como desafio final do Módulo 2, contemplando os seguintes requisitos:
-
-* criação de um mini-mundo autoral;
-* elaboração de diagrama entidade-relacionamento;
-* criação de quatro ou mais tabelas;
-* implementação de relacionamento muitos-para-muitos;
-* criação de script DDL;
-* criação de script DML;
-* inserção de no mínimo cinco registros por tabela;
-* inclusão de registros sem correspondência;
-* desenvolvimento de dez consultas práticas;
-* aplicação de filtros;
-* utilização de funções de agregação;
-* utilização de `GROUP BY`;
-* utilização de múltiplos `JOIN`;
-* utilização de `LEFT JOIN`;
-* utilização de CTE;
-* utilização de Window Function.
-
----
 ## ⚠️ Aviso
 
 Este projeto não possui finalidade comercial.
