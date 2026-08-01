@@ -54,111 +54,111 @@ order by
 -- =========================================================
 -- 3. calcular a quantidade de músicas existente em cada playlist;
 -- =========================================================
-SELECT
-    p.nome AS playlist,
-    u.nome AS usuario,
-    COUNT(pm.musica_id) AS qnt_musicas
-FROM playlists AS p
-INNER JOIN usuarios AS u
-    ON u.usuario_id = p.usuario_id
-LEFT JOIN playlist_musica AS pm
-    ON pm.playlist_id = p.playlist_id
-GROUP BY
+select
+    p.nome as playlist,
+    u.nome as usuario,
+    count(pm.musica_id) as qnt_musicas
+from playlists as p
+inner join usuarios as u
+    on u.usuario_id = p.usuario_id
+left join playlist_musica as pm
+    on pm.playlist_id = p.playlist_id
+group by
     p.playlist_id,
     p.nome,
     u.usuario_id,
     u.nome
-ORDER BY
-    qnt_musicas DESC,
+order by
+    qnt_musicas desc,
     p.nome;
 
 -- =========================================================
 -- 4. identificar as músicas mais reproduzidas;
 -- =========================================================
-SELECT
-    m.titulo AS musica,
-    a.nome_artistico AS artista,
-    COUNT(r.reproducao_id) AS total_reproducoes
-FROM musicas AS m
-INNER JOIN artistas AS a
-    ON a.artista_id = m.artista_id
-INNER JOIN reproducoes AS r
-    ON r.musica_id = m.musica_id
-GROUP BY
+select
+    m.titulo as musica,
+    a.nome_artistico as artista,
+    count(r.reproducao_id) as total_reproducoes
+from musicas as m
+inner join artistas as a
+    on a.artista_id = m.artista_id
+inner join reproducoes as r
+    on r.musica_id = m.musica_id
+group by
     m.musica_id,
     m.titulo,
     a.artista_id,
     a.nome_artistico
-ORDER BY
-    total_reproducoes DESC;
+order by
+    total_reproducoes desc;
 
 -- =========================================================
 -- 5. Artistas com maior número de reproduções
 -- =========================================================
-SELECT
-    a.nome_artistico AS artista,
-    COUNT(r.reproducao_id) AS total_reproducoes
-FROM artistas AS a
-INNER JOIN musicas AS m
-    ON m.artista_id = a.artista_id
-INNER JOIN reproducoes AS r
-    ON r.musica_id = m.musica_id
-GROUP BY
+select
+    a.nome_artistico as artista,
+    count(r.reproducao_id) as total_reproducoes
+from artistas as a
+inner join musicas as m
+    on m.artista_id = a.artista_id
+inner join reproducoes as r
+    on r.musica_id = m.musica_id
+group by
     a.artista_id,
     a.nome_artistico
-ORDER BY
-    total_reproducoes DESC,
+order by
+    total_reproducoes desc,
     artista;
 
 
 -- =========================================================
 -- 6. Tempo total ouvido por usuário
 -- =========================================================
-SELECT
-    u.nome AS usuario,
-    SUM(m.duracao_segundos) AS total_segundos,
-    ROUND(SUM(m.duracao_segundos) / 60.0, 2) AS total_minutos,
-    ROUND(SUM(m.duracao_segundos) / 3600.0, 2) AS total_horas
-FROM usuarios AS u
-INNER JOIN reproducoes AS r
-    ON r.usuario_id = u.usuario_id
-INNER JOIN musicas AS m
+select
+    u.nome as usuario,
+    SUM(m.duracao_segundos) as total_segundos,
+    ROUND(SUM(m.duracao_segundos) / 60.0, 2) as total_minutos,
+    ROUND(SUM(m.duracao_segundos) / 3600.0, 2) as total_horas
+from usuarios as u
+inner join reproducoes as r
+    on r.usuario_id = u.usuario_id
+inner join musicas as m
     ON m.musica_id = r.musica_id
-GROUP BY
+group by
     u.usuario_id,
     u.nome
-ORDER BY
-    total_segundos DESC;
+order by
+    total_segundos desc;
 
 
 -- =========================================================
 -- 7. Usuários que ainda não criaram playlists
 -- =========================================================
-SELECT
+select
     u.usuario_id,
-    u.nome AS usuario
-FROM usuarios AS u
-LEFT JOIN playlists AS p
-    ON p.usuario_id = u.usuario_id
-WHERE p.playlist_id IS NULL
-ORDER BY
+    u.nome as usuario
+from usuarios as u
+left join playlists as p
+    on p.usuario_id = u.usuario_id
+where p.playlist_id is null
+order by
     u.nome;
 
 
 -- =========================================================
 -- 8. Músicas que nunca foram reproduzidas
 -- =========================================================
-SELECT
+select
     m.musica_id,
-    m.titulo AS musica,
-    a.nome_artistico AS artista
-FROM musicas AS m
-INNER JOIN artistas AS a
-    ON a.artista_id = m.artista_id
-LEFT JOIN reproducoes AS r
-    ON r.musica_id = m.musica_id
-WHERE r.reproducao_id IS NULL
-ORDER BY
+    m.titulo as musica,
+    a.nome_artistico as artista
+from musicas as m
+inner join artistas as a
+    on a.artista_id = m.artista_id
+left join reproducoes as r
+    on r.musica_id = m.musica_id
+where r.reproducao_id is null
+order by
     a.nome_artistico,
     m.titulo;
 
@@ -167,32 +167,32 @@ ORDER BY
 -- 9. Ranking das músicas mais escutadas
 -- DENSE_RANK mantém a mesma posição para músicas empatadas
 -- =========================================================
-WITH total_por_musica AS (
-    SELECT
+with total_por_musica as (
+    select
         m.musica_id,
-        m.titulo AS musica,
-        a.nome_artistico AS artista,
-        COUNT(r.reproducao_id) AS total_reproducoes
-    FROM musicas AS m
-    INNER JOIN artistas AS a
-        ON a.artista_id = m.artista_id
-    LEFT JOIN reproducoes AS r
-        ON r.musica_id = m.musica_id
-    GROUP BY
+        m.titulo as musica,
+        a.nome_artistico as artista,
+        count(r.reproducao_id) as total_reproducoes
+    from musicas as m
+    inner join artistas as a
+        on a.artista_id = m.artista_id
+    left join reproducoes as r
+        on r.musica_id = m.musica_id
+    group by
         m.musica_id,
         m.titulo,
         a.artista_id,
         a.nome_artistico
 )
-SELECT
+select
     DENSE_RANK() OVER (
-        ORDER BY total_reproducoes DESC
-    ) AS posicao,
+        order by total_reproducoes desc
+    ) as posicao,
     musica,
     artista,
     total_reproducoes
-FROM total_por_musica
-ORDER BY
+from total_por_musica
+order by
     posicao,
     musica;
 
@@ -200,14 +200,14 @@ ORDER BY
 -- =========================================================
 -- 10. Quantidade de reproduções por gênero musical
 -- =========================================================
-SELECT
+select
     m.genero,
-    COUNT(r.reproducao_id) AS total_reproducoes
-FROM musicas AS m
-LEFT JOIN reproducoes AS r
-    ON r.musica_id = m.musica_id
-GROUP BY
+    count(r.reproducao_id) as total_reproducoes
+from musicas as m
+left join reproducoes as r
+    on r.musica_id = m.musica_id
+group by
     m.genero
-ORDER BY
-    total_reproducoes DESC,
+order by
+    total_reproducoes desc,
     m.genero;
